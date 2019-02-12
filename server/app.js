@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(morgan('combined'))
 app.use(express.static('uploads'))
-// app.use('/api/rooms', require('./routes/rooms'))
+app.use('/api/rooms', require('./routes/rooms'))
 app.use('/api/user', require('./routes/users'))
 
 app.use((req, res, next) => {

@@ -1,12 +1,12 @@
 const Joi = require('joi')
 module.exports = {
   register (req, res, next) {
-    console.log(req.body)
     const schema = {
       email: Joi.string().required().email(),
-      password: Joi.string().regex(
+      password: Joi.string().min(3).max(15).required().regex(
         new RegExp('^[a-zA-Z0-9]{8,32}$')
       ),
+      password_confirmation: Joi.any().valid(Joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match password' } } })
     }
     const { error, value } = Joi.validate(req.body, schema)
     if (error) {
@@ -34,6 +34,14 @@ module.exports = {
           messages: error.details.map((error) => error.message),
           data: value
       });
+    }
+    next()
+  },
+  destroy (req, res, next) {
+    if (req.userData.id != req.params.id) {
+      return res.status(400).json({
+        messages: 'You can not delete other users.',
+      })
     }
     next()
   },

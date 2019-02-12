@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken')
 const mailService = require('../services/mail')
 module.exports = {
     async login(req, res) {
-        console.log(req.body)
        let user = await User.findOne({email: req.body.email})
        if (!user) {
             return res.status(401).send({
@@ -28,6 +27,10 @@ module.exports = {
             })
             return res.status(200).send({
                 message: 'Logged In.',
+                user: {
+                    email: user.email,
+                    rooms: user.rooms
+                },
                 meta: {
                     token
                 }
@@ -48,14 +51,12 @@ module.exports = {
                     })
                 }
                 const user = new User({
-                    _id: new mongoose.Types.ObjectId(),
                     email: req.body.email,
                     password: hash
                 })
                 user.save().then(user => {
                     res.status(201).send({
                         message: 'User Created',
-                        user
                     })
                 }).catch(e => next(e))
             })
@@ -65,10 +66,10 @@ module.exports = {
     async resetPassword(req, res) {
         PasswordReset.findOne({ token : req.query.token }).populate({path:'user'}).exec((err, reset) => {
             if (reset) {
-                bcrypt.hash(req.body.password,10,(err, hash) => {
-                    if (err) {
+                bcrypt.hash(req.body.password,10, (error, hash) => {
+                    if (error) {
                         return res.status(500).send({
-                            error: err
+                            error
                         })
                     }
                     reset.user[0].updateOne({ password: hash}).then(() => {
