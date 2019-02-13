@@ -13,6 +13,7 @@ app.use(morgan('combined'))
 app.use(express.static('uploads'))
 app.use('/api/rooms', require('./routes/rooms'))
 app.use('/api/user', require('./routes/users'))
+app.use('/api/reservations', require('./routes/reservations'))
 
 app.use((req, res, next) => {
     const error = new Error('Not Found')
