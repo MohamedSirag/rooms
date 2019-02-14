@@ -64,7 +64,7 @@ module.exports = {
 
     },
     async resetPassword(req, res) {
-        PasswordReset.findOne({ token : req.query.token }).populate({path:'user'}).exec((err, reset) => {
+        PasswordReset.findOne({ token : req.query.token }).populate('user').exec((err, reset) => {
             if (reset) {
                 bcrypt.hash(req.body.password,10, (error, hash) => {
                     if (error) {

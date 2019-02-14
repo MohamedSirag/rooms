@@ -17,7 +17,7 @@ module.exports = {
             });
         }
 
-        if (req.body.start_hour < req.body.end_hour) {
+        if (req.body.start_hour > req.body.end_hour) {
             return res.status(422).json({
                 error: {
                     message: "You have to reserve with less hours."

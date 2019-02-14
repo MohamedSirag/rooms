@@ -26,4 +26,4 @@ userSchema.post('save', (doc, next) => {
   doc.populate('rooms').execPopulate().then( () => next());
 });
 
-module.exports = mongoose.model('User',userSchema)
+module.exports = mongoose.model('User', userSchema)

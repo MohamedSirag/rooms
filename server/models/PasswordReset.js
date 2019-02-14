@@ -15,4 +15,4 @@ const passwordResetSchema = new Schema({
         default: null,
     }
 })
-module.exports = mongoose.model('PasswordReset',passwordResetSchema)
+module.exports = mongoose.model('PasswordReset', passwordResetSchema)
