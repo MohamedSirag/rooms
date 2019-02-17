@@ -17,9 +17,9 @@ const userSchema = new Schema({
 
 })
 userSchema.post('find', async (docs,next) => {
-    for (let doc of docs) {
+    for (let doc of docs) 
       await doc.populate('rooms').execPopulate();
-    }
+    
     next()
 })
 userSchema.post('save', (doc, next) => {

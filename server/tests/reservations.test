@@ -1,0 +1,24 @@
+process.env.NODE_ENV = 'test';
+
+const app = require("../app")
+const chai = require('chai')
+const chaiHTTP = require('chai-http')
+const testVars = require('../nodemon.json')
+const should = chai.should()
+
+chai.use(chaiHTTP)
+
+describe('Reservations Test', function() {
+
+  it('Should get list of reservations', (done) => {
+    chai.request(app)
+      .get('/api/reservations')
+      .end((err, res) => {
+        console.log(res)
+        res.should.have.status(200)
+        res.body.should.be.a('array')
+        done()
+      })
+  })
+  
+})

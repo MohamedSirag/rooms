@@ -1,3 +1,4 @@
+process.env.JWT_KEY = 'somesecret'
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -7,7 +8,11 @@ const mongoose = require('mongoose')
 
 global._ = require('lodash')
 
-mongoose.connect('mongodb://localhost/rest-rooms',{ useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
+// if (process.env.NODE_ENV == 'test')
+    mongoose.connect('mongodb://admin:123456Aa@ds135335.mlab.com:35335/rooms', { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
+// else
+    // mongoose.connect('mongodb://localhost/rest-rooms', { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
+
 mongoose.Promise = global.Promise
 // middlewares
 app.use(cors())
@@ -32,6 +37,11 @@ app.use((error, req, res, next) => {
             message: error.message
         }
     })
+})
+
+const port = process.env.PORT || 4000
+const server = app.listen(port, () => {
+    console.log("app running on port.", server.address().port);
 })
 
 module.exports = app

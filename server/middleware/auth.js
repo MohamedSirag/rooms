@@ -1,12 +1,15 @@
 const jwt = require('jsonwebtoken')
 module.exports = (req, res, next) => {
-    try {
-        const decoded = jwt.verify(req.headers.authorization.split(' ')[1], process.env.JWT_KEY, null)
-        req.userData = decoded
-        next()
-    } catch(e) {
-        return res.status(401).send({
-            message: 'Unauthenticated'
-        })
+
+  jwt.verify(req.headers.authorization, process.env.JWT_KEY, (err, decoded) => {
+    if (err) {
+      console.log(err)
+      return res.status(401).send({
+        message: 'Unauthenticated'
+      })
     }
+    req.userData = decoded
+    next()
+  })
+
 }
