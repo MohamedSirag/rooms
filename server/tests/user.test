@@ -7,27 +7,53 @@ const chaiHTTP = require('chai-http')
 const testVars = require('./testvars.json')
 const should = chai.should()
 const expect = chai.expect
-
+const User = require('../models/User')
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken');
 chai.use(chaiHTTP)
+describe('User Test',  () => {
+  let token = '';
+  let user = new User({});
 
-describe('User Test', function () {
-  
-  it('Should delete user account with the correct token', (done) => {
-    chai.request(app)
-      .delete(`/api/user/${testVars.user.id}`)
-      .set("authorization", testVars.meta.token)
-      .end((err, res) => {
-        res.should.have.status(200)
-        expect(res.body.message).to.equal('You have deleted your account.')
-        done()
-      })
+  beforeEach(() => {
+    user = new User({
+      password: testVars.user.password,
+      email: testVars.user.email,
+    });
+    user.save(() => {});
+    token = jwt.sign(
+      {
+        email: user.email,
+        id: user._id
+      },
+      process.env.JWT_KEY,
+      {
+        expiresIn: "1h"
+      }
+    )
+  });
+
+  afterEach((done) => {
+    User.deleteOne(() => {});
+    mongoose.models = {};
+    token = ''
+    mongoose.modelSchemas = {};
+    done()
+  });
+
+  it('Should delete user account with the correct token', async () => {
+    let res = await chai.request(app).delete(`/api/user/${user._id}`).set('authorization', token)
+
+    res.should.have.status(200)
+
+    expect(res.body.message).to.equal('You have deleted your account.')
   })
 
   it('Should register a new user with correct info', (done) => {
     chai.request(app)
       .post('/api/user/register')
       .send({
-        email: 'imustafa97@outlook.com',
+        email: 'example@ieee.org',
         password: '159753123Aa',
         password_confirmation: '159753123Aa'
       })
@@ -41,7 +67,7 @@ describe('User Test', function () {
     chai.request(app)
       .post('/api/user/register')
       .send({
-        email: 'imustafa97@outlook.com',
+        email: user.email,
         password: '159753123Aa',
         password_confirmation: '159753123Aa'
       })
@@ -70,12 +96,12 @@ describe('User Test', function () {
     chai.request(app)
       .post('/api/user/login')
       .send({
-        email: 'imustafa97@outlook.com',
-        password: '159753123Aa'
+        email: user.email,
+        password: 'laravelproject'
       })
       .end((err, res) => {
         res.should.have.status(200)
-        expect(res.body.user.email).to.equal('imustafa97@outlook.com')
+        expect(res.body.user.email).to.equal('mohammedosama@ieee.org')
         fs.writeFile("./testvars.json", JSON.stringify(res.body), err => err ? console.log(err) : done())
       })
   })
@@ -84,7 +110,7 @@ describe('User Test', function () {
     chai.request(app)
       .post('/api/user/login')
       .send({
-        email: 'imustafa97@outlook.com',
+        email: 'mohammedosama@ieee.org',
         password: '159753123AaA'
       })
       .end((err, res) => {
@@ -97,7 +123,7 @@ describe('User Test', function () {
   it('Should get logged in user data with the correct token', (done) => {
     chai.request(app)
       .get('/api/user/')
-      .set("authorization", testVars.meta.token)
+      .set("authorization", token)
       .end((err, res) => {
         res.should.have.status(200)
         expect(res.body.data.email).to.equal(testVars.user.email)
