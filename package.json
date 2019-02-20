@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha tests/**",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start": "npm run build && ./node_modules/.bin/nodemon index"
+    "start": "npm run build && node index.js"
   },
   "repository": {
     "type": "git",
