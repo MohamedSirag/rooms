@@ -4,8 +4,8 @@
   "description": "rest-rooms using mevn",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/**",
-    "start": "node index.js"
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "start": "npm run build && ./node_modules/.bin/nodemon index"
   },
   "repository": {
     "type": "git",
