@@ -1,15 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "rest-rooms using mevn",
+  "description": "rest-rooms_using_mevn",
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start": "npm run build && ./node_modules/.bin/nodemon index"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/secmohammed/rooms.git"
   },
   "engines": {
     "node": "v10.13.0",
