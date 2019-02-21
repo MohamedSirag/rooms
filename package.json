@@ -4,7 +4,7 @@
   "description": "rest-rooms_using_mevn",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && ./node_modules/.bin/nodemon index"
+    "start": "./node_modules/.bin/nodemon index"
   },
   "engines": {
     "node": "v10.13.0",
